@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify DB Manager - Univali M3</title>
+    <!-- Google Fonts: Inter & JetBrains Mono for Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <i class="fa-brands fa-spotify logo-icon"></i>
+                <span class="logo-text">Spotify <span class="badge">DB</span></span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#" class="nav-link active" data-target="artistas">
+                    <i class="fa-solid fa-microphone-lines nav-icon"></i>
+                    <span>Artistas</span>
+                </a>
+                <a href="#" class="nav-link" data-target="albuns">
+                    <i class="fa-solid fa-compact-disc nav-icon"></i>
+                    <span>Álbuns</span>
+                </a>
+                <a href="#" class="nav-link" data-target="musicas">
+                    <i class="fa-solid fa-music nav-icon"></i>
+                    <span>Músicas</span>
+                </a>
+                <a href="#" class="nav-link" data-target="usuarios">
+                    <i class="fa-solid fa-users nav-icon"></i>
+                    <span>Usuários</span>
+                </a>
+                <div class="nav-divider"></div>
+                <a href="#" class="nav-link view-link" data-target="top-musicas">
+                    <i class="fa-solid fa-chart-line nav-icon"></i>
+                    <span>Top 10 (View)</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="dot connected"></span>
+                    <span>Conectado ao MySQL</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="content-header">
+                <h1 id="section-title">Artistas</h1>
+                <div class="header-actions">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Buscar artista...">
+                    </div>
+                    <button id="add-btn" class="btn btn-primary">
+                        <i class="fa-solid fa-plus btn-icon"></i>
+                        <span id="add-btn-text">Novo Artista</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Table Viewport -->
+            <div class="viewport-card">
+                <div class="table-responsive">
+                    <table class="data-table" id="data-table">
+                        <thead>
+                            <tr id="table-headers">
+                                <!-- Dynamic Headers -->
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Dynamic Body -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Empty State -->
+                <div id="empty-state" class="empty-state hidden">
+                    <i class="fa-solid fa-folder-open empty-icon"></i>
+                    <p>Nenhum registro encontrado.</p>
+                </div>
+            </div>
+            
+            <!-- SQL Console Logger Pane -->
+            <footer class="sql-console-container">
+                <div class="console-header">
+                    <div class="console-title">
+                        <i class="fa-solid fa-terminal console-icon"></i>
+                        <span>Console de Execução SQL (ORM Abstraction Logger)</span>
+                    </div>
+                    <button id="clear-console-btn" class="btn btn-text">Limpar</button>
+                </div>
+                <div class="console-body" id="console-body">
+                    <div class="console-line system-line">[SISTEMA] Spotify DB Manager iniciado. Aguardando operações...</div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Modal Artista -->
+    <div class="modal-overlay" id="modal-artista">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2 id="modal-artista-title">Novo Artista</h2>
+                <button class="close-modal-btn">&times;</button>
+            </div>
+            <form id="form-artista">
+                <input type="hidden" name="id">
+                <div class="form-group">
+                    <label for="art-nome">Nome *</label>
+                    <input type="text" id="art-nome" name="nome" required placeholder="Ex: Jennie Kim">
+                </div>
+                <div class="form-group">
+                    <label for="art-descricao">Descrição</label>
+                    <textarea id="art-descricao" name="descricao" rows="3" placeholder="Biografia do artista..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label for="art-seguidores">Seguidores</label>
+                        <input type="number" id="art-seguidores" name="seguidores" min="0" value="0">
+                    </div>
+                    <div class="form-group col">
+                        <label for="art-ouvintes">Ouvintes Mensais</label>
+                        <input type="number" id="art-ouvintes" name="ouvintes_mensais" min="0" value="0">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary btn-close">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Album -->
+    <div class="modal-overlay" id="modal-album">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2 id="modal-album-title">Novo Álbum</h2>
+                <button class="close-modal-btn">&times;</button>
+            </div>
+            <form id="form-album">
+                <input type="hidden" name="id">
+                <div class="form-group">
+                    <label for="alb-titulo">Título *</label>
+                    <input type="text" id="alb-titulo" name="titulo" required placeholder="Ex: Mantra">
+                </div>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label for="alb-ano">Ano *</label>
+                        <input type="number" id="alb-ano" name="ano" required min="1900" max="2100">
+                    </div>
+                    <div class="form-group col">
+                        <label for="alb-genero">Gênero</label>
+                        <input type="text" id="alb-genero" name="genero" placeholder="Ex: Pop, K-Pop">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="alb-artista">Artista *</label>
+                    <select id="alb-artista" name="id_artista" required>
+                        <!-- Options loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="alb-capa">Capa URL</label>
+                    <input type="text" id="alb-capa" name="capa_url" placeholder="Ex: jennie_mantra.jpg">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary btn-close">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Musica -->
+    <div class="modal-overlay" id="modal-musica">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2 id="modal-musica-title">Nova Música</h2>
+                <button class="close-modal-btn">&times;</button>
+            </div>
+            <form id="form-musica">
+                <input type="hidden" name="id">
+                <div class="form-group">
+                    <label for="mus-titulo">Título *</label>
+                    <input type="text" id="mus-titulo" name="titulo" required placeholder="Ex: Solo">
+                </div>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label for="mus-duracao">Duração (segundos) *</label>
+                        <input type="number" id="mus-duracao" name="duracao" required min="1">
+                    </div>
+                    <div class="form-group col">
+                        <label for="mus-ano">Ano *</label>
+                        <input type="number" id="mus-ano" name="ano" required min="1900" max="2100">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label for="mus-genero">Gênero</label>
+                        <input type="text" id="mus-genero" name="genero" placeholder="Ex: Pop">
+                    </div>
+                    <div class="form-group col">
+                        <label for="mus-reproducoes">Reproduções Iniciais</label>
+                        <input type="number" id="mus-reproducoes" name="reproducoes" min="0" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mus-artista">Artista *</label>
+                    <select id="mus-artista" name="id_artista" required>
+                        <!-- Options loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="mus-album">Álbum (Opcional)</label>
+                    <select id="mus-album" name="id_album">
+                        <option value="None">Sem Álbum</option>
+                        <!-- Options loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="mus-letra">Letra</label>
+                    <textarea id="mus-letra" name="letra" rows="3" placeholder="Letra da música..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary btn-close">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Usuario -->
+    <div class="modal-overlay" id="modal-usuario">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2 id="modal-usuario-title">Novo Usuário</h2>
+                <button class="close-modal-btn">&times;</button>
+            </div>
+            <form id="form-usuario">
+                <input type="hidden" name="id">
+                <div class="form-group">
+                    <label for="usr-nome">Nome *</label>
+                    <input type="text" id="usr-nome" name="nome" required placeholder="Ex: Mariana Silva">
+                </div>
+                <div class="form-group">
+                    <label for="usr-email">Email *</label>
+                    <input type="email" id="usr-email" name="email" required placeholder="Ex: mariana@email.com">
+                </div>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label for="usr-nascimento">Nascimento</label>
+                        <input type="date" id="usr-nascimento" name="data_nascimento">
+                    </div>
+                    <div class="form-group col">
+                        <label for="usr-pais">País</label>
+                        <input type="text" id="usr-pais" name="pais" placeholder="Ex: Brasil">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="usr-pagamento">Assinatura / Pagamento (Opcional)</label>
+                    <select id="usr-pagamento" name="id_pagamento">
+                        <option value="None">Nenhum plano ativo</option>
+                        <!-- Options loaded dynamically -->
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary btn-close">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

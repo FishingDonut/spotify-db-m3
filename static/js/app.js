@@ -17,8 +17,7 @@ const tableHeaders = document.getElementById('table-headers');
 const tableBody = document.getElementById('table-body');
 const emptyState = document.getElementById('empty-state');
 const dataTable = document.getElementById('data-table');
-const consoleBody = document.getElementById('console-body');
-const clearConsoleBtn = document.getElementById('clear-console-btn');
+// Console elements removed to simplify UI
 
 // Load App
 document.addEventListener('DOMContentLoaded', () => {
@@ -28,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function initApp() {
     setupNavigation();
     setupSearch();
-    setupConsole();
     setupModals();
     setupForms();
     
@@ -134,29 +132,9 @@ function filterTableRows() {
     }
 }
 
-// 3. SQL Console Logger Setup
-function setupConsole() {
-    clearConsoleBtn.addEventListener('click', () => {
-        consoleBody.innerHTML = '';
-        logToConsole('[SISTEMA] Console limpo.', 'system');
-    });
-}
-
+// SQL Console Logger simplified to use standard browser console.log
 function logToConsole(message, type = 'query') {
-    const line = document.createElement('div');
-    line.className = `console-line ${type}-line`;
-    
-    const timestamp = new Date().toLocaleTimeString();
-    if (type === 'query') {
-        line.innerHTML = `<span class="system-line">[${timestamp}] [SQL-ORM]</span> ${message}`;
-    } else if (type === 'error') {
-        line.innerHTML = `<span class="system-line">[${timestamp}] [ERRO]</span> ${message}`;
-    } else {
-        line.innerHTML = `<span class="system-line">[${timestamp}]</span> ${message}`;
-    }
-    
-    consoleBody.appendChild(line);
-    consoleBody.scrollTop = consoleBody.scrollHeight;
+    console.log(`[SQL-LOG] [${type.toUpperCase()}] ${message}`);
 }
 
 // 4. Modals & Forms Manager
@@ -661,7 +639,7 @@ async function playMusic(id) {
 function showPlayToast(songTitle) {
     const toast = document.createElement('div');
     toast.style.position = 'fixed';
-    toast.style.bottom = '200px';
+    toast.style.bottom = '40px';
     toast.style.right = '40px';
     toast.style.backgroundColor = 'var(--spotify-green)';
     toast.style.color = 'var(--bg-sidebar)';

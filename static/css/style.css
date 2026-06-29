@@ -382,71 +382,7 @@ body {
     transform: scale(1.1);
 }
 
-/* SQL Console Logger Pane */
-.sql-console-container {
-    height: 180px;
-    background-color: var(--console-bg);
-    border: 1px solid var(--console-border);
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
 
-.console-header {
-    background-color: rgba(0, 0, 0, 0.3);
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--console-border);
-}
-
-.console-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-secondary);
-}
-
-.console-icon {
-    color: var(--spotify-green);
-}
-
-.console-body {
-    flex-grow: 1;
-    padding: 16px 20px;
-    overflow-y: auto;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    line-height: 1.5;
-}
-
-.console-line {
-    word-break: break-all;
-    white-space: pre-wrap;
-    border-left: 2px solid transparent;
-    padding-left: 8px;
-}
-
-.console-line.system-line {
-    color: var(--text-muted);
-}
-
-.console-line.query-line {
-    color: var(--console-text);
-    border-left-color: var(--spotify-green);
-}
-
-.console-line.error-line {
-    color: var(--danger-hover);
-    border-left-color: var(--danger-color);
-}
 
 /* Empty State */
 .empty-state {
